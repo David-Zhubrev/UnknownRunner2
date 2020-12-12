@@ -1,37 +1,54 @@
 package com.appdav.unknownrunner
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.appdav.unknownrunner.gameobjects.GameDrawable
+import com.appdav.unknownrunner.gameobjects.level.MountainLevel
 
-class GameView(
-    context: Context,
-    attributeSet: AttributeSet? = null,
-    defStyleAttr: Int,
-    defStyleRes: Int
-) : SurfaceView(context, attributeSet, defStyleAttr, defStyleRes), SurfaceHolder.Callback {
+class GameView : SurfaceView, SurfaceHolder.Callback {
+
+    constructor(context: Context) : super(context)
+
+    constructor(
+        context: Context,
+        attrs: AttributeSet
+    ) : super(context, attrs)
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     private var thread: GameViewThread? = null
-    var level: GameDrawable? = null
-    private val paint: Paint
+    var level: GameDrawable =
+        MountainLevel(resources)
+    private val paint: Paint = Paint()
 
-    var isRunning = false
+
+    override fun draw(canvas: Canvas?) {
+        super.draw(canvas)
+        level.draw(canvas ?: return, paint)
+    }
 
     init {
         holder.addCallback(this)
-        //TODO: add level
         //TODO: setOnTouchListener()
-        paint = Paint()
+    }
+
+    fun update() {
+        level.update()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        TODO("Not yet implemented")
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        TODO("Not yet implemented")
+        destroy()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
@@ -39,7 +56,7 @@ class GameView(
     }
 
     private fun start() {
-        thread = GameViewThread(holder, this, level ?: return)
+        thread = GameViewThread(holder, this)
             .apply {
                 isRunning = true
                 start()
