@@ -1,8 +1,10 @@
-package com.appdav.unknownrunner.gameobjects.platforms
+package com.appdav.unknownrunner.gameobjects.platforms.concrete
 
 import android.content.res.Resources
 import android.graphics.Bitmap
-import com.appdav.unknownrunner.R
+import com.appdav.unknownrunner.gameobjects.bitmapcontainer.GroundTileBitmapContainer
+import com.appdav.unknownrunner.gameobjects.platforms.Platform
+import com.appdav.unknownrunner.gameobjects.level.Speed
 
 class GroundTile(res: Resources, speed: Speed) : Platform(res, speed) {
 
@@ -11,7 +13,7 @@ class GroundTile(res: Resources, speed: Speed) : Platform(res, speed) {
     init {
         if (bitmaps == null) {
             bitmaps = listOf(
-                createBitmap(R.drawable.ground_02, false)
+                GroundTileBitmapContainer.bitmap!!
             )
             currentFrameManager = FrameManager(
                 bitmaps!!
@@ -19,8 +21,8 @@ class GroundTile(res: Resources, speed: Speed) : Platform(res, speed) {
         }
     }
 
-    companion object : BitmapContainer() {
-        override var bitmaps: List<Bitmap>? = null
+    companion object {
+        var bitmaps: List<Bitmap>? = null
     }
 
 

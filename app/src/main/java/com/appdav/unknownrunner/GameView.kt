@@ -7,7 +7,8 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.appdav.unknownrunner.gameobjects.GameDrawable
-import com.appdav.unknownrunner.gameobjects.level.MountainLevel
+import com.appdav.unknownrunner.gameobjects.characters.player.Controllable
+import com.appdav.unknownrunner.gameobjects.level.concrete.MountainLevel
 
 class GameView : SurfaceView, SurfaceHolder.Callback {
 
@@ -24,9 +25,19 @@ class GameView : SurfaceView, SurfaceHolder.Callback {
         defStyleAttr
     )
 
+    var level: GameDrawable
+    var controllable: Controllable
+
+    init {
+        level = MountainLevel(resources).also {
+            controllable = it.controllable
+        }
+        isLongClickable = true
+        setOnTouchListener(object : GameViewTouchEventListener(context, controllable) {})
+    }
+
     private var thread: GameViewThread? = null
-    var level: GameDrawable =
-        MountainLevel(resources)
+
     private val paint: Paint = Paint()
 
 
@@ -42,6 +53,7 @@ class GameView : SurfaceView, SurfaceHolder.Callback {
 
     fun update() {
         level.update()
+
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -70,9 +82,8 @@ class GameView : SurfaceView, SurfaceHolder.Callback {
     private fun destroy() {
         pause()
         thread = null
-        level?.destroy()
+        level.destroy()
         holder.removeCallback(this)
     }
-
 
 }

@@ -1,18 +1,19 @@
 package com.appdav.unknownrunner.gameobjects.platforms
 
 import android.content.res.Resources
-import android.graphics.Rect
-import com.appdav.unknownrunner.gameobjects.collision.Collidable
-import com.appdav.unknownrunner.gameobjects.collision.Collision
-import com.appdav.unknownrunner.gameobjects.GameObject
+import com.appdav.unknownrunner.gameobjects.CollidableGameObject
+import com.appdav.unknownrunner.gameobjects.collision.CollisionSource
+import com.appdav.unknownrunner.gameobjects.level.Speed
 
 abstract class Platform(res: Resources, speed: Speed) :
-    GameObject(res, 4f, speed),
-    Collidable {
+    CollidableGameObject(res, downScaleConst, speed) {
 
-    private var mHitbox: Rect? = null
+    companion object{
+        val downScaleConst = 4f
+    }
 
     override fun update() {
+        super.update()
         x -= speed.value
         mHitbox = null
     }
@@ -21,13 +22,7 @@ abstract class Platform(res: Resources, speed: Speed) :
         x += speed.value
     }
 
-    override fun getHitbox(): Rect? {
-        mHitbox = mHitbox ?: Rect(
-            x.toInt(), y.toInt(),
-            (x + width).toInt(), (y + height).toInt()
-        )
-        return mHitbox
-    }
+    override fun onCollision(collision: CollisionSource) {}
 
-    override fun onCollision(collision: Collision) {}
+    override fun onDraw() {}
 }

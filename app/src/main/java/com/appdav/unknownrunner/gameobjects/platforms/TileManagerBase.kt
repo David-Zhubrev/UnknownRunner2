@@ -4,6 +4,8 @@ import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import com.appdav.unknownrunner.gameobjects.collision.Collidable
+import com.appdav.unknownrunner.gameobjects.level.Speed
+import com.appdav.unknownrunner.gameobjects.platforms.concrete.GroundTile
 import com.appdav.unknownrunner.tools.Screen
 
 abstract class TileManagerBase(val res: Resources, val speed: Speed) : TileManager {

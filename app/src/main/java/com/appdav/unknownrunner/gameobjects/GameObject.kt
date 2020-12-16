@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import androidx.annotation.DrawableRes
-import com.appdav.unknownrunner.gameobjects.platforms.Speed
+import com.appdav.unknownrunner.gameobjects.level.Speed
 import com.appdav.unknownrunner.tools.Screen
 
 abstract class GameObject(
@@ -19,10 +19,10 @@ abstract class GameObject(
     var y: Float = 0f
 
     //TODO: add speed
-    val width: Int by lazy { currentFrameManager?.getFrameWidth() ?: 0 }
-    val height: Int by lazy { currentFrameManager?.getFrameHeight() ?: 0 }
+    open val width: Int by lazy { currentFrameManager?.getFrameWidth() ?: 0 }
+    open val height: Int by lazy { currentFrameManager?.getFrameHeight() ?: 0 }
 
-    protected var mDestroyed = false
+    protected open var mDestroyed = false
     protected abstract var currentFrameManager: FrameManager?
 
     protected val frameManagers: ArrayList<FrameManager?> = ArrayList<FrameManager?>().also {
@@ -37,11 +37,11 @@ abstract class GameObject(
         for (i in 0..frameManagers.lastIndex) {
             frameManagers[i] = null
         }
+        mDestroyed = true
     }
 
     override fun update() {
-        if (x < -Screen.screenWidth * 0.5 || y > Screen.screenHeigth * 2) destroy()
-
+        if (x < -Screen.screenWidth * 0.5 || y > Screen.screenHeigth * 3 || y < -Screen.screenHeigth * 2) destroy()
     }
 
     fun createBitmap(
@@ -51,15 +51,11 @@ abstract class GameObject(
         BitmapFactory.decodeResource(res, resId).also {
             return Bitmap.createScaledBitmap(
                 it,
-                (it.width / downScale).toInt(),
-                (it.height / downScale).toInt(),
+                (it.width / downScale * Screen.ratioX).toInt(),
+                (it.height / downScale * Screen.ratioY).toInt(),
                 useFilter
             )
         }
-    }
-
-    abstract class BitmapContainer {
-        abstract var bitmaps: List<Bitmap>?
     }
 
     override fun draw(canvas: Canvas, paint: Paint) {
@@ -67,11 +63,14 @@ abstract class GameObject(
         currentFrameManager?.let {
             canvas.drawBitmap(it.nextFrame(), x, y, paint)
         }
+        onDraw()
     }
 
-    protected class FrameManager(
+    abstract fun onDraw()
+
+    class FrameManager(
         private val frames: List<Bitmap>,
-        val listener: OnLastFrameShownListener? = null
+        val lastFrameListener: (() -> Unit)? = null
 
     ) {
 
@@ -85,14 +84,11 @@ abstract class GameObject(
         fun nextFrame(): Bitmap {
             return if (currentFrame == lastFrameIndex) {
                 currentFrame = 0
-                listener?.onLastFrameShown()
+                lastFrameListener?.invoke()
                 frames[lastFrameIndex]
-            } else frames[currentFrame]
+            } else frames[currentFrame++]
         }
 
-        interface OnLastFrameShownListener {
-            fun onLastFrameShown()
-        }
     }
 
 }

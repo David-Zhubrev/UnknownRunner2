@@ -4,7 +4,7 @@ import android.graphics.Rect
 
 interface Collidable {
 
-    fun onCollision(collision: Collision)
+    fun onCollision(collision: CollisionSource)
     fun getHitbox(): Rect?
 
 }

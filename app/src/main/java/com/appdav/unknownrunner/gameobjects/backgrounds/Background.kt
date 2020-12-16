@@ -8,7 +8,7 @@ import android.graphics.Paint
 import androidx.annotation.DrawableRes
 import com.appdav.unknownrunner.gameobjects.GameDrawable
 import com.appdav.unknownrunner.gameobjects.GameObject
-import com.appdav.unknownrunner.gameobjects.platforms.Speed
+import com.appdav.unknownrunner.gameobjects.level.Speed
 import com.appdav.unknownrunner.tools.Screen.Companion.screenHeigth
 import com.appdav.unknownrunner.tools.Screen.Companion.screenWidth
 
@@ -26,6 +26,9 @@ abstract class Background(
         }
     }
 
+    override fun onDraw() {
+    }
+
     override fun destroy() {
         layers.forEach { it.destroy() }
         mDestroyed = true
@@ -36,12 +39,8 @@ abstract class Background(
     override fun undoUpdate() = layers.forEach { it.undoUpdate() }
 
     inner class Layer(
-        res: Resources,
         @DrawableRes val resId: Int,
-        speedModifier: SpeedModifier = SpeedModifier(
-            SpeedModifier.MODE.MULT,
-            0f
-        ),
+        val divider: Float = 0f,
         useFilter: Boolean = false
     ) : GameDrawable {
 
@@ -54,7 +53,7 @@ abstract class Background(
         private var mDestroyed = false
         override fun isDestroyed(): Boolean = mDestroyed
 
-        private val layerSpeed = speedModifier.mode.mathFunction(speed.value, speedModifier.value)
+        private val layerSpeed = speed
 
         private val bitmap: Bitmap = run {
             val tmp = BitmapFactory.decodeResource(res, resId)
@@ -62,17 +61,10 @@ abstract class Background(
         }
 
         override fun draw(canvas: Canvas, paint: Paint) {
-            if (this.layerSpeed != 0f) {
-                canvas.run {
-                    drawBitmap(bitmap, xFirst, y, paint)
-                    drawBitmap(bitmap, xSecond, y, paint)
-                    drawBitmap(bitmap, xThird, y, paint)
-                }
-            } else {
-                canvas.run {
-                    drawBitmap(bitmap, xFirst, y, paint)
-                    drawBitmap(bitmap, xSecond, y, paint)
-                }
+            canvas.run {
+                if (x < screenWidth * 1.2) drawBitmap(bitmap, xFirst, y, paint)
+                if (x < screenWidth * 1.2) drawBitmap(bitmap, xSecond, y, paint)
+                if (x < screenWidth * 1.2 && divider != 0f) drawBitmap(bitmap, xThird, y, paint)
             }
             frameMoved = false
         }
@@ -80,31 +72,35 @@ abstract class Background(
         private var frameMoved = false
 
         override fun update() {
-            xFirst -= this.layerSpeed
-            xSecond -= this.layerSpeed
-            xThird -= this.layerSpeed
-            if (xFirst + screenWidth < 0) {
-                xFirst = xThird + screenWidth
-                frameMoved = true
-            }
-            if (xSecond + screenWidth < 0) {
-                xSecond = xFirst + screenWidth
-                frameMoved = true
-            }
-            if (xThird + screenWidth < 0) {
-                xThird = xSecond + screenWidth
-                frameMoved = true
+            if (divider != 0f) {
+                xFirst -= this.layerSpeed.value / divider
+                xSecond -= this.layerSpeed.value / divider
+                xThird -= this.layerSpeed.value / divider
+                if (xFirst + screenWidth < 0) {
+                    xFirst = xThird + screenWidth
+                    frameMoved = true
+                }
+                if (xSecond + screenWidth < 0) {
+                    xSecond = xFirst + screenWidth
+                    frameMoved = true
+                }
+                if (xThird + screenWidth < 0) {
+                    xThird = xSecond + screenWidth
+                    frameMoved = true
+                }
             }
         }
 
         override fun undoUpdate() {
-            xFirst += this.layerSpeed
-            xSecond += this.layerSpeed
-            xThird += this.layerSpeed
-            if (frameMoved) {
-                if (xFirst > xSecond && xFirst > xThird) xFirst = xThird - screenWidth
-                else if (xSecond > xThird) xSecond = xFirst - screenWidth
-                else xThird = xFirst - screenWidth
+            if (divider != 0f) {
+                xFirst += this.layerSpeed.value / divider
+                xSecond += this.layerSpeed.value / divider
+                xThird += this.layerSpeed.value / divider
+                if (frameMoved) {
+                    if (xFirst > xSecond && xFirst > xThird) xFirst = xThird - screenWidth
+                    else if (xSecond > xThird) xSecond = xFirst - screenWidth
+                    else xThird = xFirst - screenWidth
+                }
             }
         }
 
@@ -113,17 +109,4 @@ abstract class Background(
         }
 
     }
-
-    data class SpeedModifier(
-        val mode: MODE,
-        val value: Float
-    ) {
-        enum class MODE(val mathFunction: (Float, Float) -> Float) {
-            ADD(fun(f1: Float, f2: Float) = f1 + f2),
-            SUBS(fun(f1: Float, f2: Float) = f1 - f2),
-            MULT(fun(f1: Float, f2: Float) = f1 * f2),
-            DIV(fun(f1: Float, f2: Float) = f1 / f2)
-        }
-    }
-
 }
