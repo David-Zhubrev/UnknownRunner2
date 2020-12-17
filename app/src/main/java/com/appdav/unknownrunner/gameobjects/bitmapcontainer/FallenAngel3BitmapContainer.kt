@@ -18,12 +18,15 @@ class FallenAngel3BitmapContainer(
         }
         if (jumpStartBitmaps == null)
             jumpStartBitmaps = createJumpStartBitmaps()
+        if (attackBitmaps == null)
+            attackBitmaps = createAttackBitmaps()
     }
 
     companion object {
         var runningBitmaps: List<Bitmap>? = null
         var airborneBitmaps: List<Bitmap>? = null
         var jumpStartBitmaps: List<Bitmap>? = null
+        var attackBitmaps: List<Bitmap>? = null
 
         const val HITBOX_MARGIN_LEFT: Int = 30
         const val HITBOX_MARGIN_RIGHT: Int = 30
@@ -31,7 +34,7 @@ class FallenAngel3BitmapContainer(
         const val HITBOX_MARGIN_TOP: Int = 30
     }
 
-    fun createAirborneBitmaps(): List<Bitmap> {
+    private fun createAirborneBitmaps(): List<Bitmap> {
         return createBitmapList(
             listOf(
                 R.drawable.fallen_angels_jump_loop_000,
@@ -44,7 +47,7 @@ class FallenAngel3BitmapContainer(
         )
     }
 
-    fun createRunningBitmaps(): List<Bitmap> {
+    private fun createRunningBitmaps(): List<Bitmap> {
         return createBitmapList(
             listOf(
                 R.drawable.fallen_angels_running_000,
@@ -63,7 +66,7 @@ class FallenAngel3BitmapContainer(
         )
     }
 
-    fun createJumpStartBitmaps(): List<Bitmap> {
+    private fun createJumpStartBitmaps(): List<Bitmap> {
         return createBitmapList(
             listOf(
                 R.drawable.fallen_angels_jump_loop_000,
@@ -72,6 +75,37 @@ class FallenAngel3BitmapContainer(
                 R.drawable.fallen_angels_jump_loop_003,
                 R.drawable.fallen_angels_jump_loop_004,
                 R.drawable.fallen_angels_jump_loop_005
+            )
+        )
+    }
+
+    private fun createAttackBitmaps(): List<Bitmap> {
+        return createBitmapList(
+            listOf(
+                R.drawable.fallen_angels_run_slashing_000,
+                R.drawable.fallen_angels_run_slashing_000,
+                R.drawable.fallen_angels_run_slashing_001,
+                R.drawable.fallen_angels_run_slashing_001,
+                R.drawable.fallen_angels_run_slashing_002,
+                R.drawable.fallen_angels_run_slashing_002,
+                R.drawable.fallen_angels_run_slashing_003,
+                R.drawable.fallen_angels_run_slashing_003,
+                R.drawable.fallen_angels_run_slashing_004,
+                R.drawable.fallen_angels_run_slashing_004,
+                R.drawable.fallen_angels_run_slashing_005,
+                R.drawable.fallen_angels_run_slashing_005,
+                R.drawable.fallen_angels_run_slashing_006,
+                R.drawable.fallen_angels_run_slashing_006,
+                R.drawable.fallen_angels_run_slashing_007,
+                R.drawable.fallen_angels_run_slashing_007,
+                R.drawable.fallen_angels_run_slashing_008,
+                R.drawable.fallen_angels_run_slashing_008,
+                R.drawable.fallen_angels_run_slashing_009,
+                R.drawable.fallen_angels_run_slashing_009,
+                R.drawable.fallen_angels_run_slashing_010,
+                R.drawable.fallen_angels_run_slashing_010,
+                R.drawable.fallen_angels_run_slashing_011,
+                R.drawable.fallen_angels_run_slashing_011
             )
         )
     }

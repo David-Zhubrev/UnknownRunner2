@@ -1,5 +1,6 @@
 package com.appdav.unknownrunner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -9,12 +10,13 @@ import com.appdav.unknownrunner.tools.Screen
 import kotlin.math.abs
 
 open class GameViewTouchEventListener(
-    private val context: Context,
-    private val controllable: Controllable
+    context: Context,
+    private val controllable: Controllable?
 ) : View.OnTouchListener {
 
     private val listener: GestureDetector = GestureDetector(context, GestureListener())
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         return listener.onTouchEvent(event)
     }
@@ -28,7 +30,8 @@ open class GameViewTouchEventListener(
 
         override fun onSingleTapUp(e: MotionEvent?): Boolean {
             try{
-                if (e!!.x < Screen.screenWidth / 2) controllable.onLeftSideClick()
+                if (e!!.x < Screen.screenWidth / 2) controllable?.onLeftSideClick()
+                else controllable?.onRightSideClick()
             } catch (e: Exception){
                 e.printStackTrace()
             }
@@ -46,13 +49,13 @@ open class GameViewTouchEventListener(
                 val diffX = e2.x - e1.x
                 if (abs(diffX) > abs(diffY)) {
                     if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffX > 0) controllable.onSwipeRight()
-                        else controllable.onSwipeLeft()
+                        if (diffX > 0) controllable?.onSwipeRight()
+                        else controllable?.onSwipeLeft()
                     }
                 } else {
                     if (abs(diffY) > SWIPE_THRESHOLD && abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) controllable.onSwipeBottom()
-                        else controllable.onSwipeUp()
+                        if (diffY > 0) controllable?.onSwipeBottom()
+                        else controllable?.onSwipeUp()
                     }
                 }
             } catch (e: NullPointerException) {

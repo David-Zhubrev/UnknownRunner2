@@ -12,18 +12,18 @@ abstract class Enemy(
 
     open var direction: Direction = Direction.LEFT
 
-    abstract var visionSight: SpawnedHitbox
+    abstract var visionSight: CompanionHitbox?
 
-    enum class Direction{
+    enum class Direction {
         LEFT,
         RIGHT,
-        UP,
-        DOWN
     }
 
     override fun update() {
         super.update()
-        visionSight.update()
+        visionSight?.update()
+        x = x - speed.value + vx
+
     }
 
     override fun onCollision(collision: CollisionSource) {
@@ -34,4 +34,5 @@ abstract class Enemy(
     abstract fun turnAround()
     abstract fun die()
     abstract fun attack()
+    abstract fun onEnemyDetected(source: CollisionSource)
 }

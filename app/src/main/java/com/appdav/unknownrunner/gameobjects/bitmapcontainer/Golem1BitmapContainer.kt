@@ -30,9 +30,9 @@ class Golem1BitmapContainer(res: Resources) : BitmapContainer(res, Golem1.DOWNSC
         var attackBitmaps: List<Bitmap>? = null
         var dyingBitmaps: List<Bitmap>? = null
 
-        const val HITBOX_MARGIN_LEFT: Int = 20
-        const val HITBOX_MARGIN_RIGHT: Int = 20
-        const val HITBOX_MARGIN_BOTTOM: Int = 20
+        const val HITBOX_MARGIN_LEFT: Int = 30
+        const val HITBOX_MARGIN_RIGHT: Int = 30
+        const val HITBOX_MARGIN_BOTTOM: Int = 30
         const val HITBOX_MARGIN_TOP: Int = 20
     }
 
@@ -63,7 +63,7 @@ class Golem1BitmapContainer(res: Resources) : BitmapContainer(res, Golem1.DOWNSC
         )
     }
 
-    fun createAttackBitmaps(): List<Bitmap> {
+    private fun createAttackBitmaps(): List<Bitmap> {
         return createBitmapList(
             listOf(
                 R.drawable.golem_01_attacking_000,
@@ -83,7 +83,7 @@ class Golem1BitmapContainer(res: Resources) : BitmapContainer(res, Golem1.DOWNSC
         )
     }
 
-    fun createDieBitmaps(): List<Bitmap>{
+    private fun createDieBitmaps(): List<Bitmap>{
         return createBitmapList(
             listOf(
                 R.drawable.golem_01_dying_000,

@@ -1,20 +1,12 @@
 package com.appdav.unknownrunner.gameobjects.collision
 
 import android.graphics.Rect
-import com.appdav.unknownrunner.gameobjects.characters.Character
 
-class CollisionHandler() {
+class CollisionHandler {
     fun checkCollisions(collidables: List<Collidable>) {
 
-        var isChar: Boolean
         outerLoop@ for (i in 0..collidables.lastIndex) {
-            if (collidables[i] is Character){
-                isChar = true // used for debug
-            }
             for (j in i + 1..collidables.lastIndex) {
-                if (collidables[j] is Character){
-                    isChar = true //used for debug
-                }
                 val rect1 = collidables[i].getHitbox() ?: continue@outerLoop
                 val rect2 = collidables[j].getHitbox() ?: continue
                 if (Rect.intersects(rect1, rect2)) {

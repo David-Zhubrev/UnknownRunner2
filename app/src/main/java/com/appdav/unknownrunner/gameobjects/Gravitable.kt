@@ -1,4 +1,3 @@
 package com.appdav.unknownrunner.gameobjects
 
-interface Gravitable{
-}
+interface Gravitable

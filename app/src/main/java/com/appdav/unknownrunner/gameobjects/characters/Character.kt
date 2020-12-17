@@ -18,8 +18,6 @@ abstract class Character(
 
     protected open var isDead = false
 
-    override val mass: Float = 100f
-
     abstract val player: Player
 
     override fun update() {
@@ -27,7 +25,7 @@ abstract class Character(
         mHitbox = null
         player.nextMove()
         y += vy
-        x += vx
+        x -= speed.value + vx
     }
 
     enum class Move {
@@ -37,8 +35,6 @@ abstract class Character(
         SHIFT_RIGHT,
         STOP,
         ATTACK,
-        MOVE_UP,
-        MOVE_DOWN,
         DIE,
         JUMP,
         DROP_DOWN,
@@ -58,7 +54,7 @@ abstract class Character(
 //    }
 
     override fun undoUpdate() {
-        x -= vx
+        x -= vx + speed.value
         y -= vy
     }
 

@@ -12,4 +12,6 @@ interface Controllable {
 
     fun onLeftSideClick()
 
+    fun onRightSideClick()
+
 }

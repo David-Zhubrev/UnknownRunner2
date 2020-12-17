@@ -15,12 +15,12 @@ abstract class CollidableGameObject(
     protected open val hitboxThresholdRight: Int = 0
     protected open val hitboxThresholdTop: Int = 0
     protected open val hitboxThresholdBottom: Int = 0
-
-
-    //TODO: Comment this if it is wrong
-//    override val width: Int by lazy { super.width - hitboxThresholdLeft - hitboxThresholdRight }
-//    override val height: Int by lazy { super.height - hitboxThresholdBottom - hitboxThresholdTop }
     protected var mHitbox: Rect? = null
+
+    override fun update() {
+        super.update()
+        mHitbox = null
+    }
 
     override fun getHitbox(): Rect? {
         mHitbox = mHitbox ?: Rect(

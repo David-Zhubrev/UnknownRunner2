@@ -6,17 +6,15 @@ import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import androidx.annotation.DrawableRes
 import com.appdav.unknownrunner.tools.Screen
-import kotlin.reflect.full.createInstance
-
 
 //This class implements basic methods for fast creation of bitmaps
 // All classes that inherit this class should also implement their own companion object containing list of preloaded bitmaps
 // Also those classes should be constructed at least once during loading
 abstract class BitmapContainer(
     val res: Resources,
-    val downScale: Float
+    private val downScale: Float
 ) {
-    protected fun createBitmap(
+    private fun createBitmap(
         @DrawableRes resId: Int,
         useFilter: Boolean = false,
         isMirrored: Boolean = false

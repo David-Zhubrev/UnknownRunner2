@@ -5,14 +5,13 @@ import com.appdav.unknownrunner.gameobjects.characters.concrete.MainCharacter
 import com.appdav.unknownrunner.gameobjects.collision.Collidable
 import com.appdav.unknownrunner.gameobjects.collision.CollisionSource
 
-class SpawnedHitbox(
+class CompanionHitbox(
     val source: Character,
-    val distance: Int,
-    val detectionCallback: (source: CollisionSource) -> Unit = {}
+    private val distance: Int,
+    private val detectionCallback: (source: CollisionSource) -> Unit = {}
 ) : Collidable {
 
-    var mHitbox: Rect? = null
-
+    private var mHitbox: Rect? = null
 
     override fun onCollision(collision: CollisionSource) {
         detectionCallback.invoke(collision)
@@ -30,7 +29,7 @@ class SpawnedHitbox(
                         (source.x - distance).toInt(),
                         source.y.toInt(),
                         source.x.toInt(),
-                        (source.y + source.height).toInt()
+                        (source.y + source.height * 1.5).toInt()
                     )
                     Enemy.Direction.RIGHT -> Rect(
                         (source.x + source.width).toInt(),
@@ -38,7 +37,6 @@ class SpawnedHitbox(
                         (source.x + source.width + distance).toInt(),
                         (source.y + source.height).toInt()
                     )
-                    else -> null //TODO
                 }
             }
             if (source is MainCharacter) {
@@ -46,7 +44,7 @@ class SpawnedHitbox(
                     (source.x + source.width).toInt(),
                     source.y.toInt(),
                     (source.x + source.width + distance).toInt(),
-                    (source.y + source.height).toInt()
+                    (source.y + source.height * 2).toInt()
                 )
             }
         }

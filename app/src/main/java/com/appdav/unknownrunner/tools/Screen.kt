@@ -8,8 +8,8 @@ class Screen private constructor(private val point: Point) {
     companion object {
 
         //Test device screen size
-        const val targetScreenHeight = 720f
-        const val targetScreenWidth = 1560f
+        private const val targetScreenHeight = 720f
+        private const val targetScreenWidth = 1560f
 
         var screenWidth by Delegates.notNull<Int>()
         var screenHeigth by Delegates.notNull<Int>()

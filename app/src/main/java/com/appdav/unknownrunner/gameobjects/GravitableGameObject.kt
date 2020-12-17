@@ -13,7 +13,6 @@ abstract class GravitableGameObject(
 
     protected var vx: Float = 0f
     protected var vy: Float = 0f
-    abstract val mass: Float
     abstract var isInAir: Boolean
     var lastFrameTimeStamp: Long = System.currentTimeMillis()
 
@@ -22,7 +21,7 @@ abstract class GravitableGameObject(
     override fun onDraw() {
         val currentTimeStamp = System.currentTimeMillis()
         val realTime = (currentTimeStamp - lastFrameTimeStamp) / 1_000f
-        if (!shouldFall && vy > 0) isInAir = false
+        if (!shouldFall && vy >= 0) isInAir = false
         lastFrameTimeStamp = currentTimeStamp
         if (!shouldFall) {
             vy = 0f
@@ -43,8 +42,7 @@ abstract class GravitableGameObject(
     override fun onCollision(collision: CollisionSource) {
         if (collision.source is Platform) {
             if (collision.verticalPosition == CollisionSource.SourcePosition.ON_BOTTOM) {
-                if (collision.verticalImpact > 0.10
-                ) {
+                if (collision.verticalImpact > 0.15 && vy >= 0) {
                     shouldFall = false
                     if (y + height - hitboxThresholdBottom > collision.source.y) {
                         y = collision.source.y - height + hitboxThresholdBottom

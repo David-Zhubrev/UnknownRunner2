@@ -9,7 +9,7 @@ abstract class Platform(res: Resources, speed: Speed) :
     CollidableGameObject(res, downScaleConst, speed) {
 
     companion object{
-        val downScaleConst = 4f
+        val downScaleConst = 3f
     }
 
     override fun update() {

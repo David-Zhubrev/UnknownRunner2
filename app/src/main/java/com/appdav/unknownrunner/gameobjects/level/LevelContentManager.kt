@@ -5,46 +5,61 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import com.appdav.unknownrunner.gameobjects.GameDrawable
 import com.appdav.unknownrunner.gameobjects.characters.Enemy
+import com.appdav.unknownrunner.gameobjects.collectables.Collectable
 import com.appdav.unknownrunner.gameobjects.collision.Collidable
 import com.appdav.unknownrunner.gameobjects.platforms.Platform
 import com.appdav.unknownrunner.tools.Screen
 
-abstract class LevelContentManager(res: Resources, speed: Speed) : GameDrawable {
+abstract class LevelContentManager(val res: Resources, val speed: Speed) : GameDrawable {
 
     protected val tiles = ArrayList<Platform>()
     protected val enemies = ArrayList<Enemy>()
+    protected val collectibles = ArrayList<Collectable>()
 
     private var mDestroyed = false
 
     fun getCollidables(): List<Collidable> {
         return ArrayList<Collidable>().apply {
             addAll(tiles)
+            addAll(collectibles)
             enemies.forEach { addAll(it.getCollidables()) }
         }
     }
 
-    fun handleTiles() {
-        if (tiles.isEmpty() || tiles.last().x < Screen.screenWidth * 1.5) createTiles()
-    }
-
-    abstract fun createTiles()
+    abstract fun createTiles(initialX: Float)
 
     override fun draw(canvas: Canvas, paint: Paint) {
         tiles.forEach { it.draw(canvas, paint) }
         enemies.forEach { it.draw(canvas, paint) }
+        collectibles.forEach { it.draw(canvas, paint) }
     }
 
     override fun update() {
-        tiles.forEach { it.update() }
-        enemies.forEach { it.update() }
+        updateEach(tiles)
+        updateEach(enemies)
+        updateEach(collectibles)
+        if ((tiles.last().x) < Screen.screenWidth * 1.5) {
+            createTiles(tiles.last().x)
+        }
+    }
+
+    private fun updateEach(list: ArrayList<out GameDrawable>) {
+        val iterator = list.iterator()
+        while (iterator.hasNext()) {
+            val elem = iterator.next()
+            if (elem.isDestroyed()) iterator.remove()
+            else elem.update()
+        }
     }
 
     override fun undoUpdate() {
         tiles.forEach { it.undoUpdate() }
         enemies.forEach { it.undoUpdate() }
+        collectibles.forEach { it.undoUpdate() }
     }
 
     override fun destroy() {
+        collectibles.forEach { it.destroy() }
         tiles.forEach { it.destroy() }
         enemies.forEach { it.destroy() }
         mDestroyed = true
@@ -52,10 +67,4 @@ abstract class LevelContentManager(res: Resources, speed: Speed) : GameDrawable 
 
     override fun isDestroyed(): Boolean = mDestroyed
 
-    enum class Element{
-        TILE,
-        GAP,
-        ENEMY_ON_GROUND,
-        ENEMY_FALLING
-    }
 }
